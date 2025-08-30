@@ -1,0 +1,27 @@
+isbn,titulo,nroEstante,paginas,precioPorDia,autorId,autorNombre,autorApellido,autorAniosCarrera
+978-9876543210,Patrones de Diseño,24,380,1.75,A-102,Lucia,Perez,19
+978-9871111111,Algoritmos Modernos,15,420,2.50,A-103,Juan,Gomez,12
+978-9872222222,Introducción a Java,6,310,1.90,A-104,Mariana,Lopez,20
+978-9873333333,Optimización de Código,18,275,2.10,A-105,Pablo,Ramirez,25
+978-9874444444,Estructuras de Datos,11,500,3.00,A-103,Juan,Gomez,12
+978-9875555555,Naruto Vol.1,7,200,1.20,A-201,Masashi,Kishimoto,30
+978-9876666666,Naruto Vol.2,8,210,1.25,A-201,Masashi,Kishimoto,30
+978-9877777777,Naruto Shippuden,14,250,1.30,A-201,Masashi,Kishimoto,30
+978-9878888888,Harry Potter y la Piedra Filosofal,22,320,2.00,A-202,J.K.,Rowling,28
+978-9879999999,Harry Potter y la Cámara Secreta,23,350,2.10,A-202,J.K.,Rowling,28
+978-9871234567,Harry Potter y el Prisionero de Azkaban,26,380,2.20,A-202,J.K.,Rowling,28
+978-9872345678,Harry Potter y el Cáliz de Fuego,27,640,2.50,A-202,J.K.,Rowling,28
+978-9873456789,Harry Potter y la Orden del Fénix,28,870,2.75,A-202,J.K.,Rowling,28
+978-9874567890,Harry Potter y el Misterio del Príncipe,29,750,2.60,A-202,J.K.,Rowling,28
+978-9875678901,Harry Potter y las Reliquias de la Muerte,30,780,2.80,A-202,J.K.,Rowling,28
+978-9876789012,El Señor de los Anillos: La Comunidad del Anillo,31,500,3.00,A-203,J.R.R.,Tolkien,40
+978-9877890123,El Señor de los Anillos: Las Dos Torres,32,450,3.10,A-203,J.R.R.,Tolkien,40
+978-9878901234,El Señor de los Anillos: El Retorno del Rey,33,520,3.20,A-203,J.R.R.,Tolkien,40
+978-9879012345,El Hobbit,10,310,2.70,A-203,J.R.R.,Tolkien,40
+978-9870123456,Juego de Tronos,12,800,3.50,A-204,George,Martin,35
+978-9871122334,Choque de Reyes,13,860,3.60,A-204,George,Martin,35
+978-9872233445,Tormenta de Espadas,16,900,3.70,A-204,George,Martin,35
+978-9873344556,Furia de Reyes,17,950,3.80,A-204,George,Martin,35
+978-9874455667,Código Limpio,19,450,2.90,A-106,Robert,Martin,50
+978-9875566778,Refactoring,20,480,3.10,A-107,Martin,Fowler,45
+978-9876677889,Domain-Driven Design,21,550,3.25,A-108,Eric,Evans,38
