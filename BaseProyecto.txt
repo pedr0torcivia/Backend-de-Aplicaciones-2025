@@ -1,0 +1,26 @@
+COMANDO PARA CREAR EL PROYECTO MAVEN:
+mvn archetype:generate "-DgroupId=ar.edu.utnfrc.backend" "-DartifactId=hola-munso" "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DinteractiveMode=false"
+
+COMANDO PARA CORRER EL PROYECTO MAVEN:
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.1.0</version>
+            <configuration>
+                <mainClass>ar.edu.utnfc.backend.App</mainClass>
+            </configuration>
+        </plugin>
+
+Después, poner en la terminal:
+mvn clean compile exec:java
+
+
+LOMBOK:
+Agregar esta dependencia en el pom.xml
+
+<dependency>
+ <groupId>org.projectlombok</groupId>
+ <artifactId>lombok</artifactId>
+ <version>1.18.30</version>
+ <scope>provided</scope>
+</dependency>
