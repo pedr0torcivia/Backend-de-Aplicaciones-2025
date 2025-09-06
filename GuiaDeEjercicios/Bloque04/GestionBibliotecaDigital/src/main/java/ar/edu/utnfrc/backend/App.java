@@ -127,5 +127,6 @@ public class App {
             }  
         }
         System.out.println("Cantidad del tipo " + msj + ": " + cant);
+        //
     }
 }
