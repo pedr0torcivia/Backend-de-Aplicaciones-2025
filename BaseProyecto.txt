@@ -1,26 +1,74 @@
-COMANDO PARA CREAR EL PROYECTO MAVEN:
-mvn archetype:generate "-DgroupId=ar.edu.utnfrc.backend" "-DartifactId=hola-munso" "-DarchetypeGroupId=org.apache.maven.archetypes" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DinteractiveMode=false"
+## 1. Crear un proyecto Maven
+Comando base (reemplazar parámetros según el proyecto):
 
-COMANDO PARA CORRER EL PROYECTO MAVEN:
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.1.0</version>
-            <configuration>
-                <mainClass>ar.edu.utnfc.backend.App</mainClass>
-            </configuration>
-        </plugin>
+mvn archetype:generate ^
+  -DgroupId=ar.edu.utnfrc.backend ^
+  -DartifactId=NOMBRE_PROYECTO ^
+  -DarchetypeGroupId=org.apache.maven.archetypes ^
+  -DarchetypeArtifactId=maven-archetype-quickstart ^
+  -DinteractiveMode=false
 
-Después, poner en la terminal:
+- groupId: nombre único de tu organización/proyecto (ej. com.miempresa, ar.edu.utnfrc.backend).
+- artifactId: nombre del proyecto (ej. hola-mundo, sistema-ventas).
+- archetype: plantilla base (quickstart es la más usada para empezar).
+
+------------------------------------------------------------
+
+## 2. Ejecutar el proyecto
+Agregar en el pom.xml el plugin de ejecución:
+
+<plugin>
+  <groupId>org.codehaus.mojo</groupId>
+  <artifactId>exec-maven-plugin</artifactId>
+  <version>3.1.0</version>
+  <configuration>
+    <mainClass>TU.GRUPO.ID.App</mainClass>
+  </configuration>
+</plugin>
+
+------------------------------------------------------------
+
+## 3. Correrlo desde terminal
 mvn clean compile exec:java
 
+------------------------------------------------------------
 
-LOMBOK:
-Agregar esta dependencia en el pom.xml
+## 4. Agregar Lombok
+En el pom.xml:
 
 <dependency>
- <groupId>org.projectlombok</groupId>
- <artifactId>lombok</artifactId>
- <version>1.18.30</version>
- <scope>provided</scope>
+  <groupId>org.projectlombok</groupId>
+  <artifactId>lombok</artifactId>
+  <version>1.18.30</version>
+  <scope>provided</scope>
+</dependency>
+
+JUNIT (para tests)
+<dependency>
+  <groupId>org.junit.jupiter</groupId>
+  <artifactId>junit-jupiter</artifactId>
+  <version>5.10.2</version>
+  <scope>test</scope>
+</dependency>
+
+H2 Database (DB embebida, ideal para labs y pruebas)
+<dependency>
+  <groupId>com.h2database</groupId>
+  <artifactId>h2</artifactId>
+  <version>2.2.224</version>
+  <scope>runtime</scope>
+</dependency>
+
+Hibernate ORM (implementación de JPA)
+<dependency>
+  <groupId>org.hibernate.orm</groupId>
+  <artifactId>hibernate-core</artifactId>
+  <version>6.4.4.Final</version>
+</dependency>
+
+Java persistency API (Jakarta.persistency.api)
+<dependency>
+  <groupId>jakarta.persistence</groupId>
+  <artifactId>jakarta.persistence-api</artifactId>
+  <version>3.1.0</version>
 </dependency>
