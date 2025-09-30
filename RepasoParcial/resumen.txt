@@ -1,0 +1,104 @@
+Se pide un menu de opciones donde se haga la lectura de un archivo csv, un base de datos y el resto de opciones
+que realicen cosultas a las base de datos. Insercion, procesamiento y consultas de bd. 
+
+pom.xml -> equivalente al package.json. Gestiona dependencias. 
+Main.java -> index.js que es el punto de entrada a la aplicacion. 
+
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <version>2.2.224</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>jakarta.persistence</groupId>
+    <artifactId>jakarta.persistence-api</artifactId>
+    <version>3.1.0</version>
+</dependency>
+<dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>6.4.4.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.30</version>
+    <scope>provided</scope>
+</dependency>
+
+h2database -> motor bd
+jpa -> persitencia 
+hibernate -> ORM (equivalente a sequalize)
+lombok -> evita codigo repetitivo
+
+1)-Crear persistence.xml. Es la configuracion de la base de datos, definimos si queremos una bde
+en memoria o una bd embebida. 
+Crear carpeta main/resources/META-INF y dentro de ella persistence.xml con:
+
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+version="3.0">
+<persistence-unit name="NOMBRE_UNIDADPERSISTENCIA"
+transaction-type="RESOURCE_LOCAL">
+<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+<properties>
+<!-- JDBC (H2 en memoria) -->
+<property name="jakarta.persistence.jdbc.driver"value="org.h2.Driver"/> INDICA Que se va a utilizar JDBC
+<property name="jakarta.persistence.jdbc.url"value="jdbc:h2:mem:demo;DB_CLOSE_DELAY=-1"/> será en memoria (mem) y se va a llamar demo
+<property name="jakarta.persistence.jdbc.user"value="sa"/> usuario
+<property name="jakarta.persistence.jdbc.password"value=""/> contraseña
+
+<!-- Dialecto específico -->
+<property name="hibernate.dialect"
+value="org.hibernate.dialect.H2Dialect"/> Dialecto H2
+<!-- DDL: para práctica inicial -->
+<property name="hibernate.hbm2ddl.auto"
+
+value="create-drop"/>
+<!-- Log -->
+<property name="hibernate.show_sql" value="true"/>
+<property name="hibernate.format_sql" value="true"/>
+</properties>
+</persistence-unit>
+</persistence>
+
+NO HAY CONEXION CON UN SERVIDOR REMOTO DE BD 
+La Base No va a ser embebida. No va a ser una base con archivo.db 
+
+ETAPA 1: MENÚ DE OPCIONES 
+Proceso bastante repetitivo. Se suele copiar y pegar la arquitectura de codigo. 
+El objetivo es realizar un menú reutilizable para cualquier ambito. 
+Menú por consola con opciones numeradas y con accion por por opcion.
+Patron de diseño Singleton (una clase tenga una unica instancia y provee un acceso global a ella)
+Un unico objeto de esa clase y TODO el codigo lo usa.
+Se deben crear los siguientes archivos en main/menu
+-ApplicationContext.java --> permite que se ejecute el menú 
+-FuncAction.java --> disparador de acciones en menu de opciones
+-MenuOption.java --> permite definir un tipo de dato. 
+-Action.java -->
+-Menu.java 
+
+En Main.java se implementa el menú:
+public class Main {
+public static void main(String[] args) {
+var ctx = ApplicationContext.getInstance();
+var actions = new Actions();
+var opciones = List.of(
+
+new MenuOption(1, "Saludar al Usuario",
+
+actions::hola_mundo)
+);
+new Menu("Menú de Opciones - Etapa 1", opciones).run(ctx);
+}
+
+ETAPA 2: PROCESAMIENTO CVS 
+Leer, procesar, ingresar datos en BD y hacer consultas.
+Colocar archivo csv en la raiz del proyecto (donde esta el pom)
+En este ejemplo cada libro tiene un autor asociado, pero cada autor tiene multiples libros (1->n). 
+
+Primero tnemos que vincularnos con nuestra unidad de persistencia (persistence.xml)
+Crear carpeta common con un archivo EntityManager que mantiene la conexion con la base de datos. Solo
+podemos tener uno solo. 
+EntityManager es una interfaz por JPA que gestiona las operaciones de persistencia (CRUD) sobre las 
+entidades. Sirve como intermediario entre BD y operacion java. 
