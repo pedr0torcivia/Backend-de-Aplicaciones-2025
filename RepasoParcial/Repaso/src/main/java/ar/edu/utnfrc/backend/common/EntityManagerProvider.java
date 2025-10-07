@@ -10,20 +10,17 @@ public class EntityManagerProvider {
 
 private EntityManagerProvider(){
     // Iniciar EntityManager
-    EntityManagerFactory emf =
-
-    Persistence.createEntityManagerFactory("MiUnidad");
-
+    EntityManagerFactory emf = Persistence.createEntityManagerFactory("MiUnidad");
     em = emf.createEntityManager();
     }
-    // Crear la instancia
+    // Crear la instancia mediante SINGLETON
     public static EntityManager getEntityManager(){
     if(emp == null){
     emp = new EntityManagerProvider();
     }
     return emp.em;
     }
-    // Cerrar conexion
+    // Cerrar conexion SE EJECUTA CUANDO SE INGRESA EL 0 EN EL MENÚ 
     public static void closeEntityManager(){
     if (emp.em != null){
     emp.em.close();

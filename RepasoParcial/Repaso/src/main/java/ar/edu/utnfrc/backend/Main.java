@@ -12,7 +12,11 @@ public class Main {
         var ctx = ApplicationContext.getInstance();
         var actions = new Actions();
         var opciones = List.of(
-            new MenuOption(1, "Saludar al Usuario", actions::hola_mundo)
+            new MenuOption(1, "Cargar datos desde CSV", actions::cargarCSV),
+            new MenuOption(2, "Listar libros", actions::listarLibros),
+            new MenuOption(3, "Buscar libro por palabra clave", actions::encontrarLibroPorPalabra),
+            new MenuOption(4, "Cantidad de libros por autor", actions::countBooksByAuthor),
+            new MenuOption(5, "Top 3 libros más antiguos", actions::findTop3LibrosMasAntiguos)
         );
-        new Menu("Menú de Opciones - Etapa 1", opciones).run(ctx);
+        new Menu("Menú de Opciones", opciones).run(ctx);
     }}

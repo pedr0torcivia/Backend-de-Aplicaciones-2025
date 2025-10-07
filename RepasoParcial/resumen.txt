@@ -26,6 +26,12 @@ Main.java -> index.js que es el punto de entrada a la aplicacion.
     <version>1.18.30</version>
     <scope>provided</scope>
 </dependency>
+<dependency>
+  <groupId>com.opencsv</groupId>
+  <artifactId>opencsv</artifactId>
+  <version>5.9</version>
+</dependency>
+
 
 h2database -> motor bd
 jpa -> persitencia 
@@ -102,3 +108,5 @@ Crear carpeta common con un archivo EntityManager que mantiene la conexion con l
 podemos tener uno solo. 
 EntityManager es una interfaz por JPA que gestiona las operaciones de persistencia (CRUD) sobre las 
 entidades. Sirve como intermediario entre BD y operacion java. 
+
+JPQL -> SQL EN JAVA OAO. Hibernate traduce JPQL a SQL 
