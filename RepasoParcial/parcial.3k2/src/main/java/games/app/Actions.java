@@ -58,4 +58,50 @@ public class Actions {
             });
         }
     }
+
+    public void top5Generos(AppContext context) {
+        var service = context.getService(JuegoService.class);
+        var top5 = service.getTop5Generos();
+
+        if (top5.isEmpty()) {
+            System.out.println("No hay juegos disponibles");
+        } else {
+            System.out.println("TOP 5 GENEROS MAS JUGADOS (ESTADO PLAYING):");
+            for (Object[] row: top5) {
+                String nombreGenero = (String) row[0];
+                Long total = (Long) row[1];
+                System.out.println("Genero: " + nombreGenero + " | Total: " + total);
+            }
+        }
+    }
+
+    public void cantidadDeJuegosPorDesarrollador(AppContext context) {
+        var service = context.getService(JuegoService.class);
+        var juegosPorDesarrollador = service.cantidadDeJuegosPorDesarrollador();
+        var juegosConMasDeUnDesarrollador = service.cantidadDeJuegosConMasDeUnDesarrollador();
+
+        if (juegosPorDesarrollador.isEmpty()) {
+            System.out.println("No hay juegos disponibles por desarrollador");
+        } else {
+            System.out.println("Cantidad de juegos por desarrollador:");
+            for (Object[] row : juegosPorDesarrollador) {
+                String nombreDesarrollador = (String) row[0];
+                Long total = (Long) row[1];
+                System.out.println("Desarrollador: " + nombreDesarrollador + " | Total: " + total);
+            }
+        }
+
+        System.out.println("Cantidad de juegos con más de un desarrollador: " + juegosConMasDeUnDesarrollador);
+    }
+
+    public void mejorDesarrollador(AppContext context) {
+        var service = context.getService(JuegoService.class);
+        var mejorDeveloper = service.getBestDeveloper();
+
+        if (mejorDeveloper == null) {
+            System.out.println("No hay desarrolladores disponibles");
+        } else {
+            System.out.println("Mejor desarrollador (con más juegos): " + mejorDeveloper);
+        }
+    }
 }

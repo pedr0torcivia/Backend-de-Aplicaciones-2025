@@ -186,4 +186,20 @@ public class JuegoService implements IService<Juego, Integer> {
     public boolean existsAny() {
         return !repo.getAllList().isEmpty();
     }
+
+    public List<Object[]> getTop5Generos() {
+        return repo.findTop5Generos();
+    }
+
+    public List<Object[]> cantidadDeJuegosPorDesarrollador() {
+        return repo.findCantidadDeJuegosPorDesarrollador();
+    }
+
+    public long cantidadDeJuegosConMasDeUnDesarrollador(){
+        return repo.findJuegosConMasDeUnDesarrollador();
+    }
+
+    public String getBestDeveloper() {
+        return repo.findBestDeveloper();
+    }
 }

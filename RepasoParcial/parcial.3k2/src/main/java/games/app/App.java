@@ -28,7 +28,10 @@ public class App {
         Actions actions = new Actions();
         menu.addOption(1, new ItemMenu<AppContext>("Cargar juegos desde CSV", actions::importarJuegos));
         menu.addOption(2, new ItemMenu<AppContext>("Listar juegos desde DB",  actions::listarJuegos));
-
+        menu.addOption(3, new ItemMenu<AppContext>("Top 5 Generos mas jugados (estado playing)",  actions::top5Generos));
+        menu.addOption(4, new ItemMenu<AppContext>("Cantidad de juegos por desarrollador", actions::cantidadDeJuegosPorDesarrollador));
+        menu.addOption(5, new ItemMenu<AppContext>("Mejor Desarrollador (mejor rating promedio de juegos)", actions::mejorDesarrollador));
+        
         // Scanner
         Scanner sc = new Scanner(System.in);
         context.put("scanner", sc);
