@@ -1,0 +1,11 @@
+Estilo,Cantidad
+Barroco,77
+Cubismo,26
+Expresionismo,16
+Impresionismo,33
+Manierismo,18
+Postimpresionismo,30
+Renacimiento,57
+Romanticismo,13
+Simbolismo,9
+Surrealismo,19

@@ -1,6 +1,7 @@
 CREAR PROYECTO
 =============================================================================================
 mvn archetype:generate -DgroupId=enunciado.+ -DartifactId=basic.parcial.3k1 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mvn archetype:generate -DgroupId=museos -DartifactId=parcial -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
 POM.XML 
 =============================================================================================

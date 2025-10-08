@@ -28,7 +28,10 @@ public class App {
         Actions actions = new Actions();
         menu.addOption(1, new ItemMenu<>("Cargar empleados desde CSV", actions::importarEmpleados));
         menu.addOption(2, new ItemMenu<>("Listar empleados desde DB", actions::listarEmpleados));
-        
+        menu.addOption(3, new ItemMenu<>("Mostrar cantidad empleados fijos y contratados" , actions::mostrarEmpleadosFijosContratados));
+        menu.addOption(4, new ItemMenu<>("Mostrar cantidad empleados por departamento" , actions::mostrarCantidadEmpleadosPorDepartamento));
+        menu.addOption(5, new ItemMenu<>("Mostrar salario promedio por puesto" , actions::mostrarSalarioPromedioPorPuesto));
+
         // inicializamos un unico scanner en appContext
         Scanner sc = new Scanner(System.in);
         context.put("scanner", sc);    // preguntar sobre opciones del scanner
