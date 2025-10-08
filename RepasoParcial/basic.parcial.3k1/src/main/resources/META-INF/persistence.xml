@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+  <persistence-unit name="empleados" transaction-type="RESOURCE_LOCAL">
+    <!-- Entidades -->
+    <class>enunciado.parcial.entities.Empleado</class>
+    <class>enunciado.parcial.entities.Departamento</class>
+    <class>enunciado.parcial.entities.Puesto</class>
+
+    <properties>
+      <!-- H2 en archivo (persistente) -->
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:file:./db/empleados;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1"/>
+      <property name="jakarta.persistence.jdbc.user" value="sa"/>
+      <property name="jakarta.persistence.jdbc.password" value=""/>
+
+      <!-- Dialecto -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+
+      <!-- Generación de esquema automática -->
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+      <!-- Logs SQL apagados -->
+      <property name="hibernate.show_sql" value="false"/>
+      <property name="hibernate.format_sql" value="false"/>
+
+      <!-- Opcional: batch para inserts masivos -->
+      <property name="hibernate.jdbc.batch_size" value="50"/>
+      <property name="hibernate.order_inserts" value="true"/>
+      <property name="hibernate.order_updates" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

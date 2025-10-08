@@ -12,7 +12,7 @@ import lombok.*;
 @Builder 
 
 public class Autor {
-    @Id
+    @Id  
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAutor; 
 

@@ -1,0 +1,21 @@
+nombre,edad,fecha_ingreso,salario,empleado_fijo,departamento,puesto
+Pedro Torcivia,28,2021-05-14,250000.00,true,Ingeniería,Analista
+Lucía Gómez,25,2022-03-10,220000.00,false,Marketing,Diseñador
+Juan Pérez,31,2020-11-02,310000.00,true,Finanzas,Contador
+María López,27,2023-01-18,230000.00,false,Recursos Humanos,Reclutador
+Sofía Díaz,29,2021-07-22,280000.00,true,IT,Desarrollador
+Carlos Ruiz,35,2019-09-05,400000.00,true,Operaciones,Gerente
+Valentina Soto,26,2022-06-30,240000.00,false,Calidad,QA
+Ramiro Álvarez,33,2020-04-14,330000.00,true,Logística,Administrador
+Julián Herrera,24,2023-05-09,210000.00,false,Soporte,Soporte Técnico
+Camila Rivas,30,2021-02-25,295000.00,true,Ventas,Analista
+Agustín Molina,32,2019-12-12,345000.00,true,Ingeniería,Data Engineer
+Florencia Paz,27,2022-08-03,260000.00,false,Marketing,Analista
+Diego Cabrera,36,2018-10-19,420000.00,true,Finanzas,Gerente
+Martina Funes,23,2024-02-01,200000.00,false,Recursos Humanos,Analista
+Nicolás Vera,29,2021-09-27,285000.00,true,IT,Desarrollador
+Paula Romero,34,2019-05-16,380000.00,true,Operaciones,Administrador
+Bruno Acosta,28,2022-12-07,255000.00,false,Calidad,QA
+Antonella Cruz,31,2020-06-11,315000.00,true,Logística,Analista
+Facundo Medina,26,2023-03-28,235000.00,false,Soporte,Soporte Técnico
+Eliana Torres,33,2020-01-21,325000.00,true,Ventas,Gerente

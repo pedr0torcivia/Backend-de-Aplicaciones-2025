@@ -31,6 +31,13 @@ Main.java -> index.js que es el punto de entrada a la aplicacion.
   <artifactId>opencsv</artifactId>
   <version>5.9</version>
 </dependency>
+dependency>
+   <groupId>org.junit.jupiter</groupId>
+   <artifactId>junit-jupiter</artifactId>
+   <version>5.10.0</version>
+   <scope>test</scope>
+</dependency>
+
 
 
 h2database -> motor bd
