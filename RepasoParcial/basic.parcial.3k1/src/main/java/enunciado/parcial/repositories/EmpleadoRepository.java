@@ -12,4 +12,5 @@ public class EmpleadoRepository extends Repository<Empleado, Integer> {
     protected Class<Empleado> getEntityClass() {
         return Empleado.class;
     }
+
 }

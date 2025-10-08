@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+  <persistence-unit name="games" transaction-type="RESOURCE_LOCAL">
+
+    <!-- Entidades -->
+    <class>games.entities.Desarrollador</class>
+    <class>games.entities.Genero</class>
+    <class>games.entities.Juego</class>
+    <class>games.entities.Plataforma</class>
+
+    <properties>
+      <!-- H2 en memoria -->
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:games;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
+      <property name="jakarta.persistence.jdbc.user" value="sa"/>
+      <property name="jakarta.persistence.jdbc.password" value=""/>
+
+      <!-- Hibernate -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+
+      <!-- Crear y dropear el esquema en cada arranque, desde anotaciones -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+      <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/>
+      <property name="jakarta.persistence.schema-generation.drop-source" value="metadata"/>
+
+      <!-- Evitar interferencias con otras estrategias -->
+      <property name="hibernate.hbm2ddl.auto" value="none"/>
+    </properties>
+  </persistence-unit>
+</persistence>
