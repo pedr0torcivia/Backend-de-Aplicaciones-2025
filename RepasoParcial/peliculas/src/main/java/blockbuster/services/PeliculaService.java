@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Stream;
 
 public class PeliculaService implements IService<Pelicula, Integer> {
@@ -95,9 +94,7 @@ public class PeliculaService implements IService<Pelicula, Integer> {
         p.setFechaEstreno(LocalDate.parse(t[1].trim())); // yyyy-MM-dd
         p.setPrecioBaseAlquiler(Double.parseDouble(t[2].trim().replace(',', '.')));
         p.setClasificacion(
-            Clasificacion.valueOf(
-                t[3].trim().toUpperCase(Locale.ROOT).replace(' ', '_').replace('-', '_')
-            )
+            Clasificacion.fromRaw(t[3]) 
         );
 
         Genero genero = generoService.getOrCreateByName(t[4].trim());
