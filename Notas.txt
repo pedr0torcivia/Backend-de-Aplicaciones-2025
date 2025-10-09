@@ -2,6 +2,7 @@ CREAR PROYECTO
 =============================================================================================
 mvn archetype:generate -DgroupId=enunciado.+ -DartifactId=basic.parcial.3k1 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 mvn archetype:generate -DgroupId=museos -DartifactId=parcial -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mvn archetype:generate -DgroupId=blockbuster -DartifactId=peliculas -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
 POM.XML 
 =============================================================================================
@@ -143,3 +144,4 @@ resources/META-INF/persistence.xml
 </persistence>
 
 =============================================================================================
+      <property name="hibernate.hbm2ddl.auto" value="update"/> GENERACION DE SCHEMA AUTOMATICO
