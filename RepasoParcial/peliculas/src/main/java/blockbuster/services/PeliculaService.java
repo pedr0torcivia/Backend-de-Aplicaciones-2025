@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PeliculaService implements IService<Pelicula, Integer> {
