@@ -1,32 +1,35 @@
 package parcial.legos.infra;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
-public final class DbInit {
-  private static final String URL = "jdbc:h2:mem:legos;DB_CLOSE_DELAY=-1";
-  private static final String USER = "sa";
-  private static final String PASS = "";
+public class DbInit {
 
-  private DbInit() {}
+    public static void run() {
+        try {
+            Connection conn = DriverManager.getConnection(
+                "jdbc:h2:mem:legos;DB_CLOSE_DELAY=-1", "sa", ""
+            );
 
-  public static void run() throws SQLException, IOException {
-    try (Connection conn = DriverManager.getConnection(URL, USER, PASS)) {
-      exec(conn, "src/main/resources/META-INF/ddl-legos.sql");
+            try (InputStream in = Thread.currentThread()
+                                        .getContextClassLoader()
+                                        .getResourceAsStream("META-INF/ddl-legos.sql")) {
+
+                if (in == null)
+                    throw new IllegalStateException("No se encontró META-INF/ddl-legos.sql en el classpath");
+
+                String sql = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+                try (Statement st = conn.createStatement()) {
+                    st.execute(sql);
+                }
+            }
+
+            conn.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Error inicializando H2 con DDL", e);
+        }
     }
-  }
-
-  private static void exec(Connection conn, String file) throws IOException, SQLException {
-    String sql = Files.readString(Path.of(file), StandardCharsets.UTF_8);
-    try (Statement st = conn.createStatement()) {
-      st.execute(sql);
-    }
-  }
 }
-
