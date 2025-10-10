@@ -40,7 +40,6 @@ public class App {
         URL csvUrl = App.class.getResource("/files/lego.csv");
         if (csvUrl == null) {
             System.err.println("⚠ No se encontró /files/lego.csv en el classpath.");
-            System.err.println("   Ruta sugerida: src/main/resources/files/lego.csv");
             // NO devolvemos; seguimos a menú igualmente
         } else {
             context.put("csvUrl", csvUrl);

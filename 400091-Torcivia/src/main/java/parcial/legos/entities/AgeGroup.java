@@ -19,40 +19,58 @@ public class AgeGroup {
     @Column(name = "CODE", length = 16, nullable = false)
     private String code;
 
+    @Transient
+    private Integer minAge;
+
+    @Transient
+    private Integer maxAge;
+
     /**
-     * Determina si una edad pertenece al rango representado por este grupo.
-     * Formatos válidos de CODE:
-     * - "12"    → min = max = 12
-     * - "6-12"  → min = 6, max = 12
-     * - "13+"   → min = 13, max = null (sin tope superior)
+     * Deriva minAge y maxAge a partir del literal CODE.
+     * Ejemplos válidos:
+     *  - "12"   → min=max=12
+     *  - "6-12" → min=6, max=12
+     *  - "13+"  → min=13, max=null
+     */
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    public void initAges() {
+        if (code == null || code.isBlank()) {
+            minAge = null;
+            maxAge = null;
+            return;
+        }
+
+        String c = code.trim();
+        try {
+            if (c.endsWith("+")) {
+                minAge = Integer.parseInt(c.replace("+", ""));
+                maxAge = null;
+            } else if (c.contains("-")) {
+                String[] parts = c.split("-");
+                minAge = Integer.parseInt(parts[0].trim());
+                maxAge = Integer.parseInt(parts[1].trim());
+            } else {
+                int exact = Integer.parseInt(c);
+                minAge = exact;
+                maxAge = exact;
+            }
+        } catch (NumberFormatException e) {
+            minAge = null;
+            maxAge = null;
+            System.err.println("Código de grupo de edad inválido: " + code);
+        }
+    }
+
+    /** 
+     * Devuelve true si la edad pertenece al rango representado por este grupo.
      */
     public boolean matchesAge(int age) {
-        if (code == null || code.isBlank()) return false;
-
-        try {
-            // Caso 1: intervalo cerrado "num-num"
-            if (code.contains("-")) {
-                String[] parts = code.split("-");
-                int min = Integer.parseInt(parts[0].trim());
-                int max = Integer.parseInt(parts[1].trim());
-                return age >= min && age <= max;
-            }
-
-            // Caso 2: intervalo abierto superior "num+"
-            if (code.endsWith("+")) {
-                int min = Integer.parseInt(code.replace("+", "").trim());
-                return age >= min;
-            }
-
-            // Caso 3: valor exacto "num"
-            int exact = Integer.parseInt(code.trim());
-            return age == exact;
-
-        } catch (NumberFormatException e) {
-            // Por si el literal es inválido
-            System.err.println("Código de grupo de edad inválido: " + code);
-            return false;
-        }
+        if (minAge == null && maxAge == null) return false;
+        if (maxAge == null) return age >= minAge;
+        if (minAge.equals(maxAge)) return age == minAge;
+        return age >= minAge && age <= maxAge;
     }
 
     @Override

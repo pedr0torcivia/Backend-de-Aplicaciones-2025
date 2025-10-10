@@ -27,18 +27,11 @@ public class Actions {
                 return;
             }
 
-            // Si alguna vez corre empacado en JAR (jar:) -> copiar a temp y leer
-            try (var in = Actions.class.getResourceAsStream("/files/lego.csv")) {
-                if (in == null) throw new IllegalArgumentException("No se pudo abrir /files/lego.csv");
-                var tmp = java.nio.file.Files.createTempFile("lego", ".csv").toFile();
-                java.nio.file.Files.copy(in, tmp.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                legoSetService.bulkInsert(tmp);
-                System.out.println("✔ Importación OK (modo JAR).");
-            }
         } catch (IOException | java.net.URISyntaxException e) {
             e.printStackTrace();
         }
     }
+    
     public void listarSets(AppContext context) {
         LegoSetService service = context.getService(LegoSetService.class);
 

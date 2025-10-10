@@ -5,6 +5,7 @@ mvn archetype:generate -DgroupId=museos -DartifactId=parcial -DarchetypeGroupId=
 mvn archetype:generate -DgroupId=blockbuster -DartifactId=peliculas -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
 mvn archetype:generate -DgroupId=parcial.legos -DartifactId=400091 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mvn archetype:generate -DgroupId=parcial.juegos -DartifactId=parcial.juegosV2 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
 POM.XML 
 =============================================================================================
