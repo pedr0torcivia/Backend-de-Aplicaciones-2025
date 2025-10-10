@@ -4,6 +4,8 @@ mvn archetype:generate -DgroupId=enunciado.+ -DartifactId=basic.parcial.3k1 -Dar
 mvn archetype:generate -DgroupId=museos -DartifactId=parcial -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 mvn archetype:generate -DgroupId=blockbuster -DartifactId=peliculas -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
+mvn archetype:generate -DgroupId=parcial.legos -DartifactId=400091 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
 POM.XML 
 =============================================================================================
 <project xmlns="http://maven.apache.org/POM/4.0.0"

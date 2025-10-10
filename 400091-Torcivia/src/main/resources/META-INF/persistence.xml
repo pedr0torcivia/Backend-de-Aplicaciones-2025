@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+  <persistence-unit name="legos" transaction-type="RESOURCE_LOCAL">
+
+    <!-- Listá explícitamente tus entidades -->
+    <class>parcial.legos.entities.Country</class>
+    <class>parcial.legos.entities.Theme</class>
+    <class>parcial.legos.entities.AgeGroup</class>
+    <class>parcial.legos.entities.LegoSet</class>
+
+    <properties>
+      <!-- H2 en memoria (usar el MISMO nombre que en DbInit) -->
+      <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:legos;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
+      <property name="jakarta.persistence.jdbc.user" value="sa"/>
+      <property name="jakarta.persistence.jdbc.password" value=""/>
+
+      <!-- Hibernate -->
+      <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+
+      <!-- No autogenerar el esquema (lo crea DbInit con ddl.sql) -->
+      <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+      <property name="hibernate.hbm2ddl.auto" value="none"/>
+    </properties>
+  </persistence-unit>
+</persistence>
