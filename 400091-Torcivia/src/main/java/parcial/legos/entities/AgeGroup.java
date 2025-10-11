@@ -12,13 +12,15 @@ public class AgeGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_AGE_GROUP_ID")
-    @SequenceGenerator(name = "SEQ_AGE_GROUP_ID", sequenceName = "SEQ_AGE_GROUP_ID", allocationSize = 1)
+    @SequenceGenerator(name = "SEQ_AGE_GROUP_ID", sequenceName = "SEQ_AGE_GROUP_ID", allocationSize = 1) 
+    // Setea el nombre de la secuencia y el tamaño de la asignación
     @Column(name = "ID_AGE_GROUP")
     private Integer id;
 
     @Column(name = "CODE", length = 16, nullable = false)
     private String code;
 
+    // Transient porque no se persisten en la base de datos, solo en memoria
     @Transient
     private Integer minAge;
 
@@ -67,10 +69,10 @@ public class AgeGroup {
      * Devuelve true si la edad pertenece al rango representado por este grupo.
      */
     public boolean matchesAge(int age) {
-        if (minAge == null && maxAge == null) return false;
-        if (maxAge == null) return age >= minAge;
-        if (minAge.equals(maxAge)) return age == minAge;
-        return age >= minAge && age <= maxAge;
+        if (minAge == null && maxAge == null) return false; // no definido
+        if (maxAge == null) return age >= minAge; // sin tope
+        if (minAge.equals(maxAge)) return age == minAge; // exacto
+        return age >= minAge && age <= maxAge; // rango
     }
 
     @Override

@@ -10,7 +10,6 @@ import parcial.legos.services.interfaces.IService;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
@@ -30,9 +29,9 @@ public class LegoSetService implements IService<LegoSet, Integer> {
     }
 
     public LegoSetService(LegoSetRepository repo,
-                        AgeGroupService ageGroupService,
-                        ThemeService themeService,
-                        CountryService countryService) {
+                          AgeGroupService ageGroupService,
+                          ThemeService themeService,
+                          CountryService countryService) {
         this.repo = repo;
         this.ageGroupService = ageGroupService;
         this.themeService = themeService;
@@ -53,53 +52,76 @@ public class LegoSetService implements IService<LegoSet, Integer> {
     public Stream<LegoSet> getAllStream() {
         return repo.getAllStream();
     }
+    /**
+     * CSV:
+     * PROD_ID;SET_NAME;PROD_DESC;REVIEW_DIFFICULTY;PIECE_COUNT;STAR_RATING;LIST_PRICE;THEME_NAME;AGE_GROUP_CODE;COUNTRY_CODE
+     */
+    public LegoSet findOrNewByProductId(Integer productId) {
+        if (productId == null) return null;
+        LegoSet s = repo.getByProductId(productId);
+        if (s == null) {
+            s = new LegoSet();          // ← solo en memoria
+            s.setProductId(productId);  // aún NO persistimos
+        }
+        return s;
+    }
 
     /**
-     * CSV esperado:
+     * CSV:
      * PROD_ID;SET_NAME;PROD_DESC;REVIEW_DIFFICULTY;PIECE_COUNT;STAR_RATING;LIST_PRICE;THEME_NAME;AGE_GROUP_CODE;COUNTRY_CODE
      */
     public void bulkInsert(File fileToImport) throws IOException {
-        Files.lines(Paths.get(fileToImport.toURI()))
-            .skip(1)
-            .filter(line -> !line.trim().isEmpty())
-            .forEach(line -> repo.create(procesarLinea(line)));
+        try (var lines = java.nio.file.Files.lines(Paths.get(fileToImport.toURI()))) {
+            lines.skip(1)
+                .map(String::trim)
+                .filter(l -> !l.isEmpty())
+                .forEach(this::procesarLinea); // acá NO repo.create/update
+        }
     }
 
-    /** Convierte una línea del CSV a LegoSet (resuelve FKs por código/nombre correctos). */
-    private LegoSet procesarLinea(String linea) {
+    private void procesarLinea(String linea) {
         String[] t = linea.split(";", -1);
+        if (t.length < 10) return;
 
-        LegoSet s = new LegoSet();
-        s.setProductId(parseIntSafe(t[0]));
-        s.setSetName(t[1].trim());
+        Integer pid = parseIntSafe(t[0]);
+        if (pid == null) return;
+
+        // Catalogos: estos sí pueden hacer get-or-create con persistencia adentro
+        Theme theme     = themeService.getOrCreateByName(emptyToNull(t[7]));
+        AgeGroup ageGrp = ageGroupService.getOrCreateByCode(emptyToNull(t[8]));
+        Country country = countryService.getOrCreateByCode(emptyToNull(t[9]));
+
+        // Buscar existente o crear uno NUEVO en memoria (sin persistir)
+        LegoSet s = findOrNewByProductId(pid);
+        boolean isNew = (s.getId() == null); // si no tiene PK, aún no existe en DB
+
+        // Completar TODOS los campos antes de tocar la DB
+        s.setSetName(emptyToNull(t[1]));
         s.setProductDescription(emptyToNull(t[2]));
         s.setReviewDifficulty(emptyToNull(t[3]));
         s.setPieceCount(parseIntSafe(t[4]));
         s.setStarRating(parseBigDecimalSafe(t[5]));
         s.setListPrice(parseBigDecimalSafe(t[6]));
-
-        // THEMES.NAME (único por DDL)
-        Theme theme = themeService.getOrCreateByName(t[7].trim());
-        // AGE_GROUPS.CODE (único)
-        AgeGroup ageGroup = ageGroupService.getOrCreateByCode(t[8].trim());
-        // COUNTRIES.CODE (único)
-        Country country = countryService.getOrCreateByCode(t[9].trim());
-
         s.setTheme(theme);
-        s.setAgeGroup(ageGroup);
-        s.setCountry(country);
-        return s;
+        s.setAgeGroup(ageGrp);   // ← NOT NULL en DDL: debe estar seteado
+        s.setCountry(country);   // ← NOT NULL en DDL
+
+        // recién ahora persistimos
+        if (isNew) {
+            repo.create(s);
+        } else {
+            repo.update(s);
+        }
     }
 
-    // --------- helpers de parseo ---------
-
+    // ------- helpers -------
     private static Integer parseIntSafe(String raw) {
-        try { return raw == null || raw.isBlank() ? null : Integer.parseInt(raw.trim()); }
+        try { return (raw == null || raw.isBlank()) ? null : Integer.parseInt(raw.trim()); }
         catch (NumberFormatException e) { return null; }
     }
 
     private static BigDecimal parseBigDecimalSafe(String raw) {
-        try { return raw == null || raw.isBlank() ? null : new BigDecimal(raw.trim().replace(',', '.')); }
+        try { return (raw == null || raw.isBlank()) ? null : new BigDecimal(raw.trim().replace(',', '.')); }
         catch (NumberFormatException e) { return null; }
     }
 
@@ -107,3 +129,4 @@ public class LegoSetService implements IService<LegoSet, Integer> {
         return (s == null || s.trim().isEmpty()) ? null : s.trim();
     }
 }
+

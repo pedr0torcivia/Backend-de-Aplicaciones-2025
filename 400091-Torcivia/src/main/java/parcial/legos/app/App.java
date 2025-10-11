@@ -33,10 +33,10 @@ public class App {
         }
 
         // 4) Contexto y servicios
-        AppContext context = AppContext.getInstance();
+        AppContext context = AppContext.getInstance(); // engloba todo los componentes de la aplicacion para centralizar su acceso
         context.registerService(LegoSetService.class, new LegoSetService());
 
-        // 5) CSV en resources (opcional)
+        // 5) CSV en resources
         URL csvUrl = App.class.getResource("/files/lego.csv");
         if (csvUrl == null) {
             System.err.println("⚠ No se encontró /files/lego.csv en el classpath.");
