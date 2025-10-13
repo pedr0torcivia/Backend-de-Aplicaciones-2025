@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LegoSetService implements IService<LegoSet, Integer> {
@@ -52,81 +53,147 @@ public class LegoSetService implements IService<LegoSet, Integer> {
     public Stream<LegoSet> getAllStream() {
         return repo.getAllStream();
     }
-    /**
-     * CSV:
-     * PROD_ID;SET_NAME;PROD_DESC;REVIEW_DIFFICULTY;PIECE_COUNT;STAR_RATING;LIST_PRICE;THEME_NAME;AGE_GROUP_CODE;COUNTRY_CODE
-     */
+
     public LegoSet findOrNewByProductId(Integer productId) {
         if (productId == null) return null;
         LegoSet s = repo.getByProductId(productId);
         if (s == null) {
-            s = new LegoSet();          // ← solo en memoria
-            s.setProductId(productId);  // aún NO persistimos
+            s = new LegoSet();
+            s.setProductId(productId);
         }
         return s;
     }
 
-    /**
-     * CSV:
-     * PROD_ID;SET_NAME;PROD_DESC;REVIEW_DIFFICULTY;PIECE_COUNT;STAR_RATING;LIST_PRICE;THEME_NAME;AGE_GROUP_CODE;COUNTRY_CODE
-     */
+     // 1ER PUNTO 
+    public long obtenerCantidadSets() {
+        return repo.countSets();
+    }
+
+    public long obtenerCantidadRangosEdad() {
+        return repo.countAgeGroups();
+    }
+
+    public long obtenerCantidadTematicas() {
+        return repo.countThemes();
+    }
+
+    // 2DO PUNTO
+    public List<Object[]> obtenerRankingPaisesPorCostoValoracion() {
+        return repo.top5CountriesByCostPerStar();
+    }
+
+    // 3ER PUNTO
+    public List<LegoSet> buscarSetsPorEdadPrecioYRating(int edad, BigDecimal maxPrice) {
+        if (edad < 0) 
+            throw new IllegalArgumentException("La edad no puede ser negativa");
+        if (maxPrice == null) 
+            throw new IllegalArgumentException("Debe especificarse un precio máximo");
+
+        // Paso 1: traer candidatos desde DB (solo precio y rating)
+        List<LegoSet> candidatos = repo.buscarSetsPorPrecioYRating(maxPrice);
+
+        // Paso 2: filtrar en memoria usando matchesAge
+        return candidatos.stream()
+                .filter(s -> s.getAgeGroup() != null && s.getAgeGroup().matchesAge(edad))
+                .sorted((a, b) -> b.getListPrice().compareTo(a.getListPrice())) // mayor a menor
+                .collect(Collectors.toList());
+    }
+
+// ======== IMPORTACIÓN MASIVA DESDE CSV (SIEMPRE INSERTA, AUN CON prod_id REPETIDO) ========
+
     public void bulkInsert(File fileToImport) throws IOException {
         try (var lines = java.nio.file.Files.lines(Paths.get(fileToImport.toURI()))) {
-            lines.skip(1)
-                .map(String::trim)
-                .filter(l -> !l.isEmpty())
-                .forEach(this::procesarLinea); // acá NO repo.create/update
+            var it = lines
+                    .skip(1) // saltea encabezado
+                    .map(String::trim)
+                    .filter(l -> !l.isEmpty())
+                    .iterator();
+
+            while (it.hasNext()) {
+                String linea = it.next();
+                procesarLinea(linea); // cada línea -> INSERT nuevo
+            }
         }
     }
+
+// ---------- procesamiento de una línea (INSERT SIEMPRE) ----------
 
     private void procesarLinea(String linea) {
         String[] t = linea.split(";", -1);
-        if (t.length < 10) return;
+        if (t.length < 13) return;
 
-        Integer pid = parseIntSafe(t[0]);
+        // 1) Ignorar si hay algún campo vacío (inclusive los no usados)
+        for (String v : t) {
+            if (v == null || v.isBlank()) return;
+        }
+
+        // 2) Parseos y validaciones
+        String agesCode = t[0].trim();
+
+        BigDecimal listPrice = parseBigDecimalSafe(t[1]);
+        if (listPrice == null) return;
+
+        Integer pieceCount = parseIntFromDecimalString(t[3]);
+        if (pieceCount == null) return;
+
+        String prodDesc = t[5].trim();
+
+        Integer pid = parseProductId(t[6]);
         if (pid == null) return;
 
-        // Catalogos: estos sí pueden hacer get-or-create con persistencia adentro
-        Theme theme     = themeService.getOrCreateByName(emptyToNull(t[7]));
-        AgeGroup ageGrp = ageGroupService.getOrCreateByCode(emptyToNull(t[8]));
-        Country country = countryService.getOrCreateByCode(emptyToNull(t[9]));
+        String reviewDifficulty = t[7].trim();
+        String setName = t[8].trim();
 
-        // Buscar existente o crear uno NUEVO en memoria (sin persistir)
-        LegoSet s = findOrNewByProductId(pid);
-        boolean isNew = (s.getId() == null); // si no tiene PK, aún no existe en DB
+        BigDecimal starRating = parseBigDecimalSafe(t[9]);
+        if (starRating == null) return;
+        if (starRating.compareTo(BigDecimal.ZERO) < 0 || starRating.compareTo(new BigDecimal("5.0")) > 0) return;
 
-        // Completar TODOS los campos antes de tocar la DB
-        s.setSetName(emptyToNull(t[1]));
-        s.setProductDescription(emptyToNull(t[2]));
-        s.setReviewDifficulty(emptyToNull(t[3]));
-        s.setPieceCount(parseIntSafe(t[4]));
-        s.setStarRating(parseBigDecimalSafe(t[5]));
-        s.setListPrice(parseBigDecimalSafe(t[6]));
+        String themeName = t[10].trim();
+        String countryCode = t[12].trim();
+
+        // 3) País debe existir previamente
+        Country country = countryService.getByCode(countryCode);
+        if (country == null) return;
+
+        // 4) Theme y AgeGroup se crean si no existen
+        Theme theme = themeService.getOrCreateByName(themeName);
+        AgeGroup ageGrp = ageGroupService.getOrCreateByCode(agesCode);
+
+        // 5) SIEMPRE crear nuevo LegoSet (sin buscar por productId)
+        LegoSet s = new LegoSet();
+        s.setProductId(pid);                 // puede repetirse entre filas
+        s.setSetName(setName);
+        s.setProductDescription(prodDesc);
+        s.setReviewDifficulty(reviewDifficulty);
+        s.setPieceCount(pieceCount);
+        s.setStarRating(starRating);
+        s.setListPrice(listPrice);
         s.setTheme(theme);
-        s.setAgeGroup(ageGrp);   // ← NOT NULL en DDL: debe estar seteado
-        s.setCountry(country);   // ← NOT NULL en DDL
+        s.setAgeGroup(ageGrp);
+        s.setCountry(country);
 
-        // recién ahora persistimos
-        if (isNew) {
-            repo.create(s);
-        } else {
-            repo.update(s);
+        repo.create(s); // persist SIEMPRE -> nuevo registro
+    }
+
+    // ------- helpers numéricos -------
+
+    private BigDecimal parseBigDecimalSafe(String s) {
+        if (s == null) return null;
+        try { return new BigDecimal(s.trim()); }
+        catch (Exception e) { return null; }
+    }
+
+    private Integer parseIntFromDecimalString(String s) {
+        if (s == null) return null;
+        String x = s.trim();
+        if (x.matches("\\d+(\\.0+)?")) {
+            return Integer.parseInt(x.split("\\.")[0]);
         }
+        try { return new BigDecimal(x).intValueExact(); }
+        catch (Exception ex) { return null; }
     }
 
-    // ------- helpers -------
-    private static Integer parseIntSafe(String raw) {
-        try { return (raw == null || raw.isBlank()) ? null : Integer.parseInt(raw.trim()); }
-        catch (NumberFormatException e) { return null; }
-    }
-
-    private static BigDecimal parseBigDecimalSafe(String raw) {
-        try { return (raw == null || raw.isBlank()) ? null : new BigDecimal(raw.trim().replace(',', '.')); }
-        catch (NumberFormatException e) { return null; }
-    }
-
-    private static String emptyToNull(String s) {
-        return (s == null || s.trim().isEmpty()) ? null : s.trim();
+    private Integer parseProductId(String s) {
+        return parseIntFromDecimalString(s);
     }
 }
-

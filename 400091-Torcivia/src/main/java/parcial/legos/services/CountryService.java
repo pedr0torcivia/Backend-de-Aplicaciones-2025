@@ -50,4 +50,9 @@ public class CountryService implements IService<Country, Integer> {
         }
         return c;
     }
+
+    public Country getByCode(String code) {
+        if (code == null || code.isBlank()) return null;
+        return repo.getByCode(code.trim().toUpperCase());
+    }
 }
