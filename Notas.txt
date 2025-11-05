@@ -7,6 +7,9 @@ mvn archetype:generate -DgroupId=blockbuster -DartifactId=peliculas -DarchetypeG
 mvn archetype:generate -DgroupId=parcial.legos -DartifactId=400091 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 mvn archetype:generate -DgroupId=parcial.juegos -DartifactId=parcial.juegosV2 -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
+
+mvn archetype:generate -DgroupId=TPI_G11 -DartifactId=TPI -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
 POM.XML 
 =============================================================================================
 <project xmlns="http://maven.apache.org/POM/4.0.0"
